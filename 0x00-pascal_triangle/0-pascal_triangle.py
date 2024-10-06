@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+""" pascal_trianlge function that will output based on number of rows input
+    return based on list
+"""
 
 def pascal_triangle(n):
     """
