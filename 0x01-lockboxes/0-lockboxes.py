@@ -1,20 +1,21 @@
 #!/usr/bin/python3
-from collections import deque
+
 
 def canUnlockAll(boxes):
-    """Determine if all boxes can be unlocked."""
-    n = len(boxes)  # Get the total number of boxes
-    visited = [False] * n  # Track visited boxes, initialized to False
-    visited[0] = True  # The first box is unlocked
-    queue = deque([0])  # Initialize BFS with the first box
+    # Initialize a list to keep track of which boxes can be opened
+    opened = [False] * len(boxes)
+    opened[0] = True  # The first box is already unlocked
 
-    while queue:
-        current_box = queue.popleft()  # Get the current box to process
-        # Check each key in the current box
-        for key in boxes[current_box]:
-            # If the key corresponds to a valid box that hasn't been visited
-            if key < n and not visited[key]:
-                visited[key] = True  # Mark the box as visited
-                queue.append(key)  # Add the box to the queue for further exploration
+    # Initialize a stack (or queue) for DFS/BFS and add the first box
+    stack = [0]
 
-    return all(visited)  # Return True if all boxes are visited
+    # Iterate until there are no more boxes to explore
+    while stack:
+        box_index = stack.pop()  # Get the next box to explore
+        for key in boxes[box_index]:  # Check the keys in the current box
+            if key < len(boxes) and not opened[key]:
+                opened[key] = True  # Mark the box as opened
+                stack.append(key)  # Add the newly opened box to the stack
+
+    # Check if all boxes are opened
+    return all(opened)
