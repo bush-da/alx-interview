@@ -3,10 +3,11 @@
 import sys
 import signal
 
+
 def print_stats(dict_sc, total_file_size):
     """
     Prints the total file size and counts for each status code.
-    
+
     Args:
         dict_sc: Dictionary of status codes with their counts.
         total_file_size: Total file size from processed lines.
@@ -16,6 +17,7 @@ def print_stats(dict_sc, total_file_size):
         if val != 0:
             print("{}: {}".format(key, val))
 
+
 def signal_handler(sig, frame):
     """
     Handles keyboard interruption (CTRL + C) by printing current stats
@@ -23,6 +25,7 @@ def signal_handler(sig, frame):
     """
     print_stats(dict_sc, total_file_size)
     sys.exit(0)
+
 
 # Initialize variables
 total_file_size = 0
