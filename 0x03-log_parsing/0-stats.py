@@ -62,8 +62,6 @@ try:
         # Print stats every 10 lines
         if line_count % 10 == 0:
             print_stats(status_counts, total_size)
-            # Reset the status counts after printing
-            status_counts = {key: 0 for key in status_counts.keys()}
 
 except KeyboardInterrupt:
     print_stats(status_counts, total_size)
