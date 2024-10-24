@@ -3,28 +3,31 @@
 import sys
 import signal
 
-def print_stats(status_counts, total_size):
+def print_stats(dict_sc, total_file_size):
     """
-    Prints the current total file size and counts for each status code.
-    Only status codes with non-zero counts are printed.
+    Prints the total file size and counts for each status code.
+    
+    Args:
+        dict_sc: Dictionary of status codes with their counts.
+        total_file_size: Total file size from processed lines.
     """
-    print(f"File size: {total_size}")
-    for code in sorted(status_counts.keys()):
-        if status_counts[code] > 0:
-            print(f"{code}: {status_counts[code]}")
+    print("File size: {}".format(total_file_size))
+    for key, val in sorted(dict_sc.items()):
+        if val != 0:
+            print("{}: {}".format(key, val))
 
 def signal_handler(sig, frame):
     """
-    Handles the keyboard interruption (CTRL + C) signal. Prints the current
-    statistics (total file size and status code counts) before exiting the program.
+    Handles keyboard interruption (CTRL + C) by printing current stats
+    before exiting the program.
     """
-    print_stats(status_counts, total_size)
+    print_stats(dict_sc, total_file_size)
     sys.exit(0)
 
 # Initialize variables
-total_size = 0
-line_count = 0
-status_counts = {
+total_file_size = 0
+counter = 0
+dict_sc = {
     "200": 0,
     "301": 0,
     "400": 0,
@@ -40,29 +43,25 @@ signal.signal(signal.SIGINT, signal_handler)
 
 try:
     for line in sys.stdin:
-        line_count += 1
-        parts = line.split()
+        parsed_line = line.split()  # Split the line into components
+        counter += 1
 
-        # Skip the line if it does not have the correct format (at least 7 parts)
-        if len(parts) < 7:
-            continue
+        if len(parsed_line) >= 7:  # Check if line has enough components
+            try:
+                file_size = int(parsed_line[-1])  # Get file size
+                status_code = parsed_line[-2]  # Get status code
 
-        # Extract status code and file size from the line
-        try:
-            status_code = parts[-2]  # status code
-            file_size = int(parts[-1])  # file size
-            
-            if status_code in status_counts:
-                status_counts[status_code] += 1
-            total_size += file_size
+                total_file_size += file_size  # Update total file size
 
-        except (ValueError, IndexError):
-            continue
+                if status_code in dict_sc:  # Update status code count
+                    dict_sc[status_code] += 1
 
-        # Print stats every 10 lines
-        if line_count % 10 == 0:
-            print_stats(status_counts, total_size)
+            except (ValueError, IndexError):
+                continue  # Skip lines with invalid data
 
-except KeyboardInterrupt:
-    print_stats(status_counts, total_size)
-    sys.exit(0)
+            if counter == 10:  # Print stats every 10 lines
+                print_stats(dict_sc, total_file_size)
+                counter = 0  # Reset counter after printing
+
+finally:
+    print_stats(dict_sc, total_file_size)  # Print final stats on exit
