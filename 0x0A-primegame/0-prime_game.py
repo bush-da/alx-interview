@@ -8,6 +8,7 @@ def is_prime(num):
             return False
     return True
 
+
 def generate_primes(n):
     """Generates a list of primes up to n."""
     primes = [True] * (n + 1)
@@ -17,6 +18,7 @@ def generate_primes(n):
             for j in range(i * i, n + 1, i):
                 primes[j] = False
     return primes
+
 
 def isWinner(x, nums):
     """Determines the winner of the game."""
@@ -28,7 +30,8 @@ def isWinner(x, nums):
     cumulative_primes = [0] * (max_num + 1)
 
     for i in range(1, max_num + 1):
-        cumulative_primes[i] = cumulative_primes[i - 1] + (1 if primes[i] else 0)
+        cumulative_primes[i] = cumulative_primes[i - 1] + (1
+                                                           if primes[i] else 0)
 
     maria_wins = 0
     ben_wins = 0
