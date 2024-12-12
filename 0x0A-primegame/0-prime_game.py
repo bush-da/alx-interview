@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """prime game solution"""
 
+
 def is_prime(num):
     """Checks if a number is prime."""
     if num < 2:
